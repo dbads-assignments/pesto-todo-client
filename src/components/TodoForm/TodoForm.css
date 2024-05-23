@@ -46,6 +46,7 @@
   }
   
   .todo-item {
+    position: relative;
     padding: 10px;
     border: 1px solid #ccc;
     margin-bottom: 10px;
@@ -63,3 +64,11 @@ input::placeholder, textarea::placeholder {
 .description {
     color: white;
 }
+
+.trashButton {
+    position: absolute; /* Position the trash button absolutely */
+    top: 10px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+    cursor: pointer; /* Change cursor to pointer */
+    color: rgb(165, 59, 59);
+  }

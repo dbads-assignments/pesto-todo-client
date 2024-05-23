@@ -3,8 +3,8 @@ import './Navbar.css';
 function Navbar() {
   return (
 
-    <div class="row">
-      <div class="text-container">
+    <div className="row">
+      <div className="text-container">
         Todo App
       </div>
     </div> 
