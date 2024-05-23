@@ -1,0 +1,9 @@
+.text-container {
+    display: grid;
+    background-color: #19556d;
+    text-align: center;
+    justify-content: center;
+    place-items: center;
+    color: white;
+    height: 9vh;
+}
