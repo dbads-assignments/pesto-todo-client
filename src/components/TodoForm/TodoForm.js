@@ -1,12 +1,16 @@
+/* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
 import './TodoForm.css';
-import { FaBeer, FaCross, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 
 function TodoForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [todos, setTodos] = useState([]);
+  
+  const [isEdit, setIsEdit] = useState(false);
+  const [editingTodoId, setEditingTodoId] = useState(null);
 
   useEffect(() => {
     // Define an async function inside useEffect
@@ -24,10 +28,14 @@ function TodoForm() {
     fetchTodos();
   }, []); // Empty dependency array ensures this runs only once
 
-  async function saveTodoToDB(todo) {
+  async function saveTodoToDB(todo, todoId) {
     try {
-      const response = await fetch('http://localhost:4000/todos', {
-        method: 'POST',
+      const url = isEdit 
+        ? `http://localhost:4000/todos/${todoId}` 
+        : 'http://localhost:4000/todos';
+
+      const response = await fetch(url, {
+        method: isEdit ? 'PATCH' : 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -43,12 +51,20 @@ function TodoForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newTodo = { title, description };
+    const updatedTodo = { title, description };
 
     // add this todo to db
-    await saveTodoToDB(newTodo);
+    await saveTodoToDB(updatedTodo);
 
-    setTodos([...todos, newTodo]);
+
+    if (isEdit) {
+      setTodos(
+        todos.map(todo => todo._id !== editingTodoId ? todo : { ...todo, ...updatedTodo })
+      );
+      setIsEdit(false);
+    } else {
+      setTodos([...todos, updatedTodo]);
+    }
 
     setTitle('');
     setDescription('');
@@ -65,6 +81,20 @@ function TodoForm() {
     console.log(response);
 
     setTodos(todos.filter(todo => todo._id !== todoId));
+  }
+
+  function handleEditClick(todoId) {
+    setIsEdit(true);
+    setEditingTodoId(todoId);
+    const editingTodo = todos.find(todo => todo._id === todoId);
+    setTitle(editingTodo.title);
+    setDescription(editingTodo.description);
+  }
+
+  function cancelUpdate() {
+    setIsEdit(false);
+    setTitle('');
+    setDescription('');
   }
 
   return (
@@ -98,8 +128,21 @@ function TodoForm() {
               ></textarea>
             </div>
             <div className="form-group">
-              <button type="submit">Add Todo</button>
+              <button type="submit" className='btn btn-primary'> 
+                {isEdit ? 'Update Todo' : 'Add Todo'}
+              </button>
+              {
+                isEdit 
+                 && 
+                <button 
+                  type="submit" 
+                  className='btn btn-danger cancelButton' 
+                  onClick={()=>{cancelUpdate();}}> 
+                    Cancel Update 
+                </button> }
             </div>
+            
+            
           </form>
         </div>
       </div>
@@ -118,6 +161,10 @@ function TodoForm() {
 
             <span className='trashButton' onClick={()=> { handleDelete(todo._id); }}>
               <FaTrash />
+            </span>
+            
+            <span className='editButton' onClick={()=> { handleEditClick(todo._id); }}>
+              <FaEdit />
             </span>
           </div>
         ))}

@@ -24,9 +24,10 @@
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
+    border-radius: 5px;
   }
   
-  .form-group button {
+  .form-group.submitButton { 
     padding: 10px 15px;
     background-color: #14171a;
     color: #fff;
@@ -34,6 +35,10 @@
     cursor: pointer;
     width: 50%;
     border-radius: 3%;
+  }
+
+  .cancelButton {
+    float: right;
   }
   
   .form-group button:hover {
@@ -71,4 +76,12 @@ input::placeholder, textarea::placeholder {
     right: 10px; /* Adjust as needed */
     cursor: pointer; /* Change cursor to pointer */
     color: rgb(165, 59, 59);
+  }
+
+  .editButton {
+    position: absolute; /* Position the trash button absolutely */
+    top: 10px; /* Adjust as needed */
+    right: 40px; /* Adjust as needed */
+    cursor: pointer; /* Change cursor to pointer */
+    color: rgb(59, 63, 165);
   }
